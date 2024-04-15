@@ -16,11 +16,10 @@ mkdir "$APP_NAME/Contents/Resources"
 #Build app
 dotnet publish "$PROJECT" -c Release -f net8.0 -r osx-arm64 --self-contained=true -p:PublishSingleFile=true -p:UseAppHost=true
 
-
 #Move app
 mkdir -p "$APP_NAME/Contents/MacOS/"
 cp -R -f "$PUBLISH_OUTPUT_DIRECTORY"/* "$APP_NAME/Contents/MacOS/"
-echo "++++++++"
+
 echo "$PUBLISH_OUTPUT_DIRECTORY"
 rm -rf "$APP_NAME/Contents/MacOS/publish"
 cp "$INFO_PLIST" "$APP_NAME/Contents/Info.plist"
