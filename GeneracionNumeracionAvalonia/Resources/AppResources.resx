@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+
+	<data name="Error" xml:space="preserve">
+		<value>Error</value>
+	</data>
+	<data name="Aviso" xml:space="preserve">
+		<value>Aviso</value>
+	</data>
+	<data name="ErrorRuta" xml:space="preserve">
+		<value>Se ha producido un error al obtener la ruta.</value>
+	</data>
+	<data name="GuardadoCorrectamente" xml:space="preserve">
+		<value>Se ha guardado correctamente.</value>
+	</data>
+	<data name="ErrorGenerico" xml:space="preserve">
+		<value>Se ha producido un error.</value>
+	</data>
+	<data name="ErrorFinMenor0" xml:space="preserve">
+		<value>El registro Fin no puede ser menor 0.</value>
+	</data>
+	<data name="ErrorFinMenorInicio" xml:space="preserve">
+		<value>El registro Fin no puede ser menor o igual que el de Inicio.</value>
+	</data>
+	<data name="ErrorNumeradores0" xml:space="preserve">
+		<value>Los numeradores no pueden ser menor o igual a 0.</value>
+	</data>
+	<data name="DescuadreRegistroNumeradores" xml:space="preserve">
+		<value>Descuadre de registros y numeradores\n ¿Desea Continuar?.</value>
+	</data>
+	<data name="Numerador" xml:space="preserve">
+		<value>Numerador </value>
+	</data>
+	<data name="NumeradoresDel" xml:space="preserve">
+		<value>Numeradores del</value>
+	</data>
+	<data name="NumeradorDel" xml:space="preserve">
+		<value>Numerador del</value>
+	</data>
+	<data name="A" xml:space="preserve">
+		<value>a</value>
+	</data>
+	<data name="NumeroNumeradores" xml:space="preserve">
+		<value>Número de numeradores: </value>
+	</data>
+	<data name="Inicio" xml:space="preserve">
+		<value>Inicio: </value>
+	</data>
+	<data name="Fin" xml:space="preserve">
+		<value>Fin: </value>
+	</data>
+	<data name="Generar" xml:space="preserve">
+		<value>Generar</value>
+	</data>
+	<data name="Copyright" xml:space="preserve">
+		<value>Copyright © 2024 | Artes Gráficas Díaz-Hellín</value>
+	</data>
+	<data name="GeneradorBaseDatos" xml:space="preserve">
+		<value>Generador de Base de Datos</value>
+	</data>
+	<data name="Formato" xml:space="preserve">
+		<value>Formato: </value>
+	</data>
+	<data name="ArchivoExcel" xml:space="preserve">
+		<value>Archivo excel (*.xlsx) | *.xlsx</value>
+	</data>
+	<data name="ArchivoCSV" xml:space="preserve">
+		<value>Valores Separados por comas | *.csv</value>
+	</data>
+</root>
+

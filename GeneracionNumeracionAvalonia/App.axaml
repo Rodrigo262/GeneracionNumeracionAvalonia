@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="GeneracionNumeracionAvalonia.App"
              xmlns:local="using:GeneracionNumeracionAvalonia"
-             RequestedThemeVariant="Default">
+             RequestedThemeVariant="Light">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
     <Application.DataTemplates>
@@ -12,4 +12,15 @@
     <Application.Styles>
         <FluentTheme />
     </Application.Styles>
+    <Application.Resources>
+        <ResourceDictionary>
+            <!-- Definición de colores -->
+            <Color x:Key="PrimaryColor">#253676</Color>
+            <Color x:Key="SecondaryColor">#fdb700</Color>
+            
+            <!-- Definición de pinceles con los colores -->
+            <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}" />
+            <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource SecondaryColor}" />
+        </ResourceDictionary>
+    </Application.Resources>
 </Application>
