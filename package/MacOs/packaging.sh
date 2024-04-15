@@ -1,7 +1,7 @@
 #cleanup folders
-APP_NAME="../../GeneracionNumeracionAvalonia/App/GeneracionNumeracion.app"
-PUBLISH_OUTPUT_DIRECTORY="../../GeneracionNumeracionAvalonia/GeneracionNumeracionAvalonia/bin/Release/net8.0/osx-arm64/publish/."
-PROJECT="../../GeneracionNumeracionAvalonia/GeneracionNumeracionAvalonia.csproj"
+APP_NAME="../../GeneracionNumeracionAvaloniaDesktop/App/GeneracionNumeracion.app"
+PUBLISH_OUTPUT_DIRECTORY="../../GeneracionNumeracionAvalonia/bin/Release/net8.0/osx-arm64/publish/."
+PROJECT="/../../GeneracionNumeracionAvalonia/GeneracionNumeracionAvalonia.csproj"
 INFO_PLIST="Info.plist"
 ICON_FILE="Counter.icns"
 
@@ -19,7 +19,7 @@ dotnet publish "$PROJECT" -c Release -f net8.0 -r osx-arm64 --self-contained=tru
 
 #Move app
 mkdir -p "$APP_NAME/Contents/MacOS/"
-cp -R -f "../../GeneracionNumeracionAvalonia/GeneracionNumeracionAvalonia/bin/Release/net8.0/osx-arm64/publish/"/* "$APP_NAME/Contents/MacOS/"
+cp -R -f "../../GeneracionNumeracionAvaloniaDesktop/GeneracionNumeracionAvalonia/bin/Release/net8.0/osx-arm64/publish/"/* "$APP_NAME/Contents/MacOS/"
 echo "++++++++"
 echo "$PUBLISH_OUTPUT_DIRECTORY"
 rm -rf "$APP_NAME/Contents/MacOS/publish"
@@ -27,4 +27,4 @@ cp "$INFO_PLIST" "$APP_NAME/Contents/Info.plist"
 cp "$ICON_FILE" "$APP_NAME/Contents/Resources/$ICON_FILE"
 
 echo "[INFO] Creating GeneracionNumeracion.pkg"
-productbuild --component "$APP_NAME" /Applications "../../GeneracionNumeracionAvalonia/GeneracionNumeracion.pkg"
+productbuild --component "$APP_NAME" /Applications "../../GeneracionNumeracionAvaloniaDesktop/GeneracionNumeracion.pkg"
