@@ -2,8 +2,8 @@
 .PHONY: package # Ambiguous reference with package folder
 SOLUTION = $(CURDIR)/GeneracionNumeracionAvalonia.sln
 TEST_PROJECT = $(CURDIR)/GeneracionNumeracionTest/GeneracionNumeracionTest.csproj
-PACKAGE = $(CURDIR)/package/Macos/packaging.sh
-
+PACKAGE_MAC = $(CURDIR)/package/Macos/packaging.sh
+PACKAGE_WIN = $(CURDIR)/package/Win/packaging.sh
 # Tareas
 restore:
 	dotnet restore $(SOLUTION)
@@ -19,6 +19,9 @@ test: format
 	dotnet test $(TEST_PROJECT)
 
 package:
-	sh $(PACKAGE)
+	@echo "Generation Mac Os package"
+	sh $(PACKAGE_MAC)
+	@echo "Generation Win package"
+	sh $(PACKAGE_WIN)
 
 all: restore build test package
