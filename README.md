@@ -20,7 +20,7 @@ To run tests.
 ```bash
   make test
 ```
-To generate package (only in Mac Os).
+To generate package MacOs arm64 & Win-x64.
 ```bash
   make package
 ```
@@ -41,9 +41,3 @@ This project is used by the following companies:
 ## Authors
 
 - [@Rodrigo262](https://www.github.com/Rodrigo262)
-
-
-## Screenshots
-
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
-
