@@ -1,0 +1,84 @@
+name: Build and Package
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore GeneracionNumeracionAvalonia.sln
+
+      - name: Build
+        run: dotnet build GeneracionNumeracionAvalonia.sln
+
+      - name: Test
+        continue-on-error: false  
+        run: dotnet test GeneracionNumeracionTest/GeneracionNumeracionTest.csproj
+
+      - name: Package
+        run: |
+          sh package/Macos/packaging.sh 
+
+  windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore GeneracionNumeracionAvalonia.sln
+
+      - name: Build
+        run: dotnet build GeneracionNumeracionAvalonia.sln
+
+      - name: Test
+        continue-on-error: false  
+        run: dotnet test GeneracionNumeracionTest/GeneracionNumeracionTest.csproj
+
+      - name: Package
+        run: dotnet publish GeneracionNumeracionAvalonia/GeneracionNumeracionAvalonia.csproj -c Release -f net8.0 -r win-x64 /p:PublishSingleFile=true /p:PublishTrimmed=true /p:IncludeNativeLibrariesForSelfExtract=true /p:GenerateAppxPackageOnBuild=true
+
+  cleanup-macos:
+    runs-on: macos-latest
+    needs: [macos]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Clean workspace for macOS
+        run: |
+          rm -rf ./* || true
+          rm -rf ./.??* || true
+  cleanup-windows:
+    runs-on: windows-latest
+    needs: [windows]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Clean workspace for windows
+        run: |
+          rm -rf ./* || true
+          rm -rf ./.??* || true
