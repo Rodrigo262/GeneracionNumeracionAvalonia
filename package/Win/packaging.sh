@@ -13,7 +13,7 @@ echo "$RELATIVE_PROJECT"
 rm -rf "$RELATIVE_ROOT/*.exe"
 
 # Compilar la aplicación
-dotnet publish "$RELATIVE_PROJECT" -c Release -f net8.0 -r win-x64 /p:PublishSingleFile=true /p:PublishTrimmed=true /p:IncludeNativeLibrariesForSelfExtract=true
+dotnet publish "$RELATIVE_PROJECT" -c Release -f net8.0 -r win-x64 /p:PublishSingleFile=true /p:PublishTrimmed=true /p:IncludeNativeLibrariesForSelfExtract=true /p:GenerateAppxPackageOnBuild=true
 
 # Mover la aplicación
 cp -R -f "$RELATIVE_PUBLISH_OUTPUT_DIRECTORY"/*.exe "$RELATIVE_ROOT"
