@@ -1,3 +1,4 @@
+![Estado del último GitHub Action](https://github.com/Rodrigo262/GeneracionNumeracionAvalonia/workflows/Build%20and%20Package/badge.svg)
 
 # Generación Numeración
 
