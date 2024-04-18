@@ -1,5 +1,7 @@
-﻿using GeneracionNumeracionAvalonia.Services;
+﻿using GeneracionNumeracionAvalonia;
+using GeneracionNumeracionAvalonia.Services;
 using GeneracionNumeracionAvalonia.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using MsBox.Avalonia.Enums;
 
@@ -10,12 +12,22 @@ public class Tests
 {
     MainWindowViewModel mainWindowViewModel;
     Mock<IMessageBox> mockIMessage;
+    Mock<ILogger> mockILogger;
+    Mock<IServiceProvider> mockProvider;
 
     [SetUp]
     public void Setup()
     {
         mockIMessage = new Mock<IMessageBox>();
-        mainWindowViewModel = new(mockIMessage.Object);
+        mockILogger = new Mock<ILogger>();
+        mockProvider = new Mock<IServiceProvider>();
+
+        mockProvider.Setup(m => m.GetService(typeof(IMessageBox))).Returns(mockIMessage.Object);
+        mockProvider.Setup(m => m.GetService(typeof(ILogger))).Returns(mockILogger.Object);
+
+        App.ServiceProvider = mockProvider.Object;
+
+        mainWindowViewModel = new();
     }
 
     [Test]

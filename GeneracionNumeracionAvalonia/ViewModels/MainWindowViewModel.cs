@@ -9,8 +9,8 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using GeneracionNumeracionAvalonia.Resources;
-using GeneracionNumeracionAvalonia.Services;
 using GeneracionNumeracionAvalonia.Base;
+using GeneracionNumeracionAvalonia.Services;
 
 namespace GeneracionNumeracionAvalonia.ViewModels;
 
@@ -36,12 +36,10 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public ICommand GenerateCommand { get; set; }
 
-    private IMessageBox MessageBoxService { get; set; }
-
-    public MainWindowViewModel(IMessageBox messageBox)
+    public MainWindowViewModel()
     {
         CreateCommands();
-        MessageBoxService = messageBox;
+        Serilog.Log.Debug($"hola {DateTime.UtcNow.Second}");
     }
 
     void CreateCommands()
