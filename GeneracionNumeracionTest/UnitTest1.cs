@@ -7,7 +7,6 @@ using MsBox.Avalonia.Enums;
 
 namespace GeneradorNumeracionTest;
 
-
 public class Tests
 {
     MainWindowViewModel mainWindowViewModel;

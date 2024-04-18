@@ -6,8 +6,8 @@ namespace GeneracionNumeracionAvalonia.Base;
 
 public class ViewModelBase : ObservableObject
 {
-    public IMessageBox MessageBoxService;
-    public ILogger LoggerService;
+    public IMessageBox? MessageBoxService;
+    public ILogger? LoggerService;
 
     public ViewModelBase()
     {

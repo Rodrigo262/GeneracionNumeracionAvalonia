@@ -7,17 +7,17 @@ namespace GeneracionNumeracionAvalonia.Base
     public class Command : ICommand
     {
 
-        private readonly Func<object, bool> _canExecute;
-        private readonly Action<object> _executeAction;
+        private readonly Func<object?, bool> _canExecute;
+        private readonly Action<object?> _executeAction;
         private bool _canExecuteCache;
 
         public event EventHandler? CanExecuteChanged;
 
-        public Command(Action<object> executeAction) : this(executeAction, null)
+        public Command(Action<object?> executeAction) : this(executeAction, null)
         {
         }
 
-        public Command(Action<object> executeAction, Func<object, bool> canExecute)
+        public Command(Action<object?> executeAction, Func<object?, bool> canExecute)
         {
             _executeAction = executeAction;
             _canExecute = canExecute;
@@ -121,15 +121,15 @@ namespace GeneracionNumeracionAvalonia.Base
 
     public class AsyncCommand : IAsyncCommand
     {
-        private readonly Func<object, bool> _canExecute;
+        private readonly Func<object?, bool> _canExecute;
         private readonly Func<object, Task> _executeAction;
         private bool _canExecuteCache;
 
-        public AsyncCommand(Func<object, Task> executeAction) : this(executeAction, null)
+        public AsyncCommand(Func<object?, Task> executeAction) : this(executeAction, null)
         {
         }
 
-        public AsyncCommand(Func<object, Task> executeAction, Func<object, bool> canExecute)
+        public AsyncCommand(Func<object?, Task> executeAction, Func<object?, bool> canExecute)
         {
             _executeAction = executeAction;
             _canExecute = canExecute;
