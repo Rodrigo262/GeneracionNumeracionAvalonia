@@ -11,7 +11,7 @@ namespace GeneracionNumeracionAvalonia.Base
         private readonly Action<object> _executeAction;
         private bool _canExecuteCache;
 
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged;
 
         public Command(Action<object> executeAction) : this(executeAction, null)
         {
@@ -23,7 +23,7 @@ namespace GeneracionNumeracionAvalonia.Base
             _canExecute = canExecute;
         }
 
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
         {
             if (_canExecute == null)
             {
@@ -41,7 +41,7 @@ namespace GeneracionNumeracionAvalonia.Base
             return _canExecuteCache;
         }
 
-        public void Execute(object parameter)
+        public void Execute(object? parameter)
         {
             _executeAction(parameter);
         }
@@ -81,7 +81,7 @@ namespace GeneracionNumeracionAvalonia.Base
         /// </summary>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
         {
             if (_canExecute != null)
                 return _canExecute((T)parameter);
@@ -93,7 +93,7 @@ namespace GeneracionNumeracionAvalonia.Base
         /// This method is called from XAML to execute the command.
         /// </summary>
         /// <param name="parameter"></param>
-        public void Execute(object parameter)
+        public void Execute(object? parameter)
         {
             _execute((T)parameter);
         }
@@ -111,7 +111,7 @@ namespace GeneracionNumeracionAvalonia.Base
         /// <summary>
         /// This event notify XAML controls using the command to reevaluate the CanExecute of it.
         /// </summary>
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged;
     }
 
     public interface IAsyncCommand : ICommand
@@ -135,7 +135,7 @@ namespace GeneracionNumeracionAvalonia.Base
             _canExecute = canExecute;
         }
 
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
         {
             if (_canExecute == null)
             {
@@ -153,14 +153,14 @@ namespace GeneracionNumeracionAvalonia.Base
             return _canExecuteCache;
         }
 
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged;
 
-        public async void Execute(object parameter)
+        public async void Execute(object? parameter)
         {
             await ExecuteAsync(parameter);
         }
 
-        public async Task ExecuteAsync(object parameter)
+        public async Task ExecuteAsync(object? parameter)
         {
             await _executeAction(parameter);
         }
