@@ -14,10 +14,15 @@ namespace GeneracionNumeracionAvalonia.Services
     {
         public Logger()
         {
+            string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            string appName = "GeneradorNumeracion";
+            string logFileName = "GeneradorNumeracion.log";
+
+            string logFilePath = Path.Combine(documentsPath, appName, logFileName);
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .WriteTo.Console()
-                .WriteTo.File("/Users/rodrigo/Documents/Rodrigo/Git/GeneracionNumeracionAvaloniaDesktop/myapp.txt", shared: false)
+                .WriteTo.File(logFilePath, shared: false)
                 .CreateLogger();
         }
 

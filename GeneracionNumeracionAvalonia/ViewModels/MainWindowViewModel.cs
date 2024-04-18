@@ -10,7 +10,6 @@ using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using GeneracionNumeracionAvalonia.Resources;
 using GeneracionNumeracionAvalonia.Base;
-using GeneracionNumeracionAvalonia.Services;
 
 namespace GeneracionNumeracionAvalonia.ViewModels;
 
@@ -20,7 +19,7 @@ public partial class MainWindowViewModel : ViewModelBase
     string filename = string.Empty;
     string path = string.Empty;
 
-    public List<string> Extensions { get; set; } = new() { AppResources.ArchivoExcel, AppResources.ArchivoCSV };
+    public List<string> Extensions { get; set; } = [AppResources.ArchivoExcel, AppResources.ArchivoCSV];
 
     [ObservableProperty]
     private int counters = 1;
@@ -34,12 +33,12 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private int selectedFormat = 0;
 
-    public ICommand GenerateCommand { get; set; }
+    public ICommand? GenerateCommand { get; set; }
 
     public MainWindowViewModel()
     {
         CreateCommands();
-        Serilog.Log.Debug($"hola {DateTime.UtcNow.Second}");
+        Serilog.Log.Debug("Initilize MainWindow");
     }
 
     void CreateCommands()
@@ -76,6 +75,7 @@ public partial class MainWindowViewModel : ViewModelBase
         catch (Exception e)
         {
             System.Diagnostics.Debug.WriteLine(e.Message);
+            LoggerService?.LogError(e, nameof(SaveFileDialog));
         }
     }
 
@@ -98,16 +98,17 @@ public partial class MainWindowViewModel : ViewModelBase
         catch (Exception e)
         {
             System.Diagnostics.Debug.WriteLine(e.Message);
-            await MessageBoxService
+            await MessageBoxService?
                 .GetMessageBoxStandard(
                     AppResources.Error,
                     AppResources.ErrorRuta,
                     ButtonEnum.Ok,
                     Icon.Error);
+            LoggerService?.LogError(e, nameof(Browse));
         }
     }
 
-    async void GenerateExecute(object parameter)
+    async void GenerateExecute(object? parameter)
     {
         try
         {
@@ -142,7 +143,7 @@ public partial class MainWindowViewModel : ViewModelBase
         catch (Exception e)
         {
             System.Diagnostics.Debug.WriteLine(e.Message);
-
+            LoggerService?.LogError(e, nameof(GenerateExecute));
             await MessageBoxService
                 .GetMessageBoxStandard(
                    AppResources.Error,
@@ -174,10 +175,10 @@ public partial class MainWindowViewModel : ViewModelBase
 
             return true;
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            System.Diagnostics.Debug.WriteLine(ex.Message);
-
+            System.Diagnostics.Debug.WriteLine(e.Message);
+            LoggerService?.LogError(e, nameof(GenerateExcel));
             throw;
         }
     }
@@ -201,10 +202,10 @@ public partial class MainWindowViewModel : ViewModelBase
 
             return true;
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            System.Diagnostics.Debug.WriteLine(ex.Message);
-
+            System.Diagnostics.Debug.WriteLine(e.Message);
+            LoggerService?.LogError(e, nameof(GenerateCSV));
             throw;
         }
     }
@@ -301,6 +302,7 @@ public partial class MainWindowViewModel : ViewModelBase
                    AppResources.ErrorFinMenor0,
                    ButtonEnum.Ok,
                    Icon.Error);
+            LoggerService?.LogInformation(AppResources.ErrorFinMenor0);
             return false;
         }
         if (Start >= End)
@@ -311,6 +313,7 @@ public partial class MainWindowViewModel : ViewModelBase
                    AppResources.ErrorFinMenorInicio,
                    ButtonEnum.Ok,
                    Icon.Error);
+            LoggerService?.LogInformation(AppResources.ErrorFinMenorInicio);
             return false;
         }
         if (Counters <= 0)
@@ -321,6 +324,7 @@ public partial class MainWindowViewModel : ViewModelBase
                    AppResources.ErrorNumeradores0,
                    ButtonEnum.Ok,
                    Icon.Error);
+            LoggerService?.LogInformation(AppResources.ErrorNumeradores0);
             return false;
         }
         if (((End - Start + 1) % Counters) != 0)
@@ -331,7 +335,7 @@ public partial class MainWindowViewModel : ViewModelBase
                    AppResources.DescuadreRegistroNumeradores,
                    ButtonEnum.YesNo,
                    Icon.Warning);
-
+            LoggerService?.LogInformation(AppResources.DescuadreRegistroNumeradores);
             if (result == ButtonResult.No)
                 return false;
         }
