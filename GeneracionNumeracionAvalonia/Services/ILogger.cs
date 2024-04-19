@@ -19,6 +19,8 @@ namespace GeneracionNumeracionAvalonia.Services
             string logFileName = "GeneradorNumeracion.log";
 
             string logFilePath = Path.Combine(documentsPath, appName, logFileName);
+            File.Delete(logFilePath);
+
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .WriteTo.Console()
