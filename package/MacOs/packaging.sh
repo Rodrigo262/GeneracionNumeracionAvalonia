@@ -36,4 +36,5 @@ cp "$INFO_PLIST" "$RELATIVE_APP_NAME/Contents/"
 cp "$ICON_FILE" "$RELATIVE_APP_NAME/Contents/Resources/"
 
 # echo "[INFO] Creando GeneracionNumeracion.pkg"
-productbuild --component "$RELATIVE_APP_NAME" /Applications "$RELATIVE_ROOT/GeneracionNumeracion.pkg"
+HASH=$(git rev-parse --short HEAD)
+productbuild --component "$RELATIVE_APP_NAME" /Applications "$RELATIVE_ROOT/GeneracionNumeracion-$HASH.pkg"

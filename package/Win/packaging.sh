@@ -16,4 +16,8 @@ rm -rf "$RELATIVE_ROOT/*.exe"
 dotnet publish "$RELATIVE_PROJECT" -c Release -f net8.0 -r win-x64 /p:PublishSingleFile=true /p:PublishTrimmed=true /p:IncludeNativeLibrariesForSelfExtract=true /p:GenerateAppxPackageOnBuild=true
 
 # Mover la aplicación
+
+
 cp -R -f "$RELATIVE_PUBLISH_OUTPUT_DIRECTORY"/*.exe "$RELATIVE_ROOT"
+HASH=$(git rev-parse --short HEAD)
+mv "GeneracionNumeracionAvalonia.exe" "$RELATIVE_ROOT/GeneracionNumeracion-$HASH.exe"
