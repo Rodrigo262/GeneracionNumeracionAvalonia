@@ -39,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: GeneracionNumeracion.pkg
-          path: ${{ github.workspace }}/GeneracionNumeracion.pkg
+          path: ${{ github.workspace }}/GeneracionNumeracion-*.pkg
 
   windows:
     runs-on: windows-latest
@@ -65,11 +65,20 @@ jobs:
 
       - name: Package
         run: dotnet publish GeneracionNumeracionAvalonia/GeneracionNumeracionAvalonia.csproj -c Release -f net8.0 -r win-x64 /p:PublishSingleFile=true /p:PublishTrimmed=true /p:IncludeNativeLibrariesForSelfExtract=true /p:GenerateAppxPackageOnBuild=true
+
+      - name: Rename file with short commit hash
+        shell: bash
+        run: |
+          HASH=$(git rev-parse --short HEAD)
+          echo "Short commit hash: ${HASH}"
+          mv GeneracionNumeracionAvalonia/bin/Release/net8.0/win-x64/publish/*.exe GeneracionNumeracionAvalonia/bin/Release/net8.0/win-x64/publish/GeneracionNumeracion-${HASH}.exe
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: executable
-          path: GeneracionNumeracionAvalonia/bin/Release/net8.0/win-x64/publish/*.exe
+          name: GeneracionNumeracion.exe
+          path: GeneracionNumeracionAvalonia/bin/Release/net8.0/win-x64/publish/GeneracionNumeracion-*.exe
+
 
   cleanup-macos:
     runs-on: macos-latest
