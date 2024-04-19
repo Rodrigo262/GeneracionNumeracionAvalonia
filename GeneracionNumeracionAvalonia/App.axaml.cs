@@ -11,8 +11,8 @@ namespace GeneracionNumeracionAvalonia;
 
 public partial class App : Application
 {
-    public static IServiceProvider ServiceProvider { get; set; }
-
+    public static IServiceProvider? ServiceProvider { get; set; }
+    public static IClassicDesktopStyleApplicationLifetime? GeneradorApp { get; set; }
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -37,6 +37,7 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            GeneradorApp = desktop;
             desktop.MainWindow = new MainWindow
             {
                 DataContext = new MainWindowViewModel(),

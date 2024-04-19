@@ -12,7 +12,8 @@
         MinHeight="400"
         Width="500"
         Height="500"
-        Title="{x:Static resources:AppResources.GeneradorBaseDatos}">
+        Title="{x:Static resources:AppResources.GeneradorBaseDatos}"
+        x:DataType="vm:MainWindowViewModel">
 
     <DockPanel>
             <Menu DockPanel.Dock="Top">
@@ -20,7 +21,7 @@
               <MenuItem Header="Archivo">
                 <MenuItem Header="Abrir"/>
                 <Separator/>
-                <MenuItem Header="Salir"/>
+                <MenuItem Header="Salir" Command="{Binding ShutdownCommand}"/>
               </MenuItem>
 
               <MenuItem Header="Edición">
@@ -29,7 +30,7 @@
               </MenuItem>
 
               <MenuItem Header="Ayuda">
-                <MenuItem Header="Versión"/>
+                <MenuItem Header="Versión" Command="{Binding VersionCommand}" />
               </MenuItem>
 
             </Menu>

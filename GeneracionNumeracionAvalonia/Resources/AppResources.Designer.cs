@@ -103,6 +103,15 @@ namespace GeneracionNumeracionAvalonia.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .csv.
+        /// </summary>
+        public static string csv {
+            get {
+                return ResourceManager.GetString("csv", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Descuadre de registros y numeradores\n ¿Desea Continuar?..
         /// </summary>
         public static string DescuadreRegistroNumeradores {
@@ -211,6 +220,15 @@ namespace GeneracionNumeracionAvalonia.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Guardar Numerador.
+        /// </summary>
+        public static string GuardarNumerador {
+            get {
+                return ResourceManager.GetString("GuardarNumerador", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Inicio: .
         /// </summary>
         public static string Inicio {
@@ -252,6 +270,24 @@ namespace GeneracionNumeracionAvalonia.Resources {
         public static string NumeroNumeradores {
             get {
                 return ResourceManager.GetString("NumeroNumeradores", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ¿Estas seguro que quieres salir de la aplicación?.
+        /// </summary>
+        public static string SalirPregunta {
+            get {
+                return ResourceManager.GetString("SalirPregunta", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .xlsx.
+        /// </summary>
+        public static string xlsx {
+            get {
+                return ResourceManager.GetString("xlsx", resourceCulture);
             }
         }
     }

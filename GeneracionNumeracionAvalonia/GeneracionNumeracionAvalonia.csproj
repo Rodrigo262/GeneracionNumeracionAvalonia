@@ -11,8 +11,8 @@
     <Company>Rodrigo</Company>
     <Product>GeneradorNumeracion</Product>
     <Copyright>Copyright © 2024 Artes Gráficas Díaz-Hellín</Copyright>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <FileVersion>1.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

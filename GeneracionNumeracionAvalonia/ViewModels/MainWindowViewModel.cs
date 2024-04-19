@@ -5,11 +5,11 @@ using System.Windows.Input;
 using OfficeOpenXml;
 using MsBox.Avalonia.Enums;
 using System.Threading.Tasks;
-using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using GeneracionNumeracionAvalonia.Resources;
 using GeneracionNumeracionAvalonia.Base;
+using System.Reflection;
 
 namespace GeneracionNumeracionAvalonia.ViewModels;
 
@@ -19,7 +19,7 @@ public partial class MainWindowViewModel : ViewModelBase
     string filename = string.Empty;
     string path = string.Empty;
 
-    public List<string> Extensions { get; set; } = [AppResources.ArchivoExcel, AppResources.ArchivoCSV];
+    public List<string> Extensions { get; set; } = new List<string>() { AppResources.ArchivoExcel, AppResources.ArchivoCSV };
 
     [ObservableProperty]
     private int counters = 1;
@@ -34,30 +34,63 @@ public partial class MainWindowViewModel : ViewModelBase
     private int selectedFormat = 0;
 
     public ICommand? GenerateCommand { get; set; }
+    public ICommand? ShutdownCommand { get; set; }
+    public ICommand? VersionCommand { get; set; }
+
 
     public MainWindowViewModel()
     {
         CreateCommands();
-        Serilog.Log.Debug("Initilize MainWindow");
     }
 
     void CreateCommands()
     {
         GenerateCommand = new Command(GenerateExecute);
+        ShutdownCommand = new Command(ShutdownExecute);
+        VersionCommand = new Command(VersionExecute);
+    }
+
+    async void VersionExecute(object? parameter)
+    {
+        Version version = Assembly.GetExecutingAssembly().GetName().Version;
+
+        // Mostrar la versión en un MessageBox
+
+        await MessageBoxService
+                .GetMessageBoxStandard(
+                    AppResources.Aviso,
+                    $"Versión: {version}",
+                    ButtonEnum.Ok,
+                    Icon.Info);
+    }
+
+    async void ShutdownExecute(object? parameter)
+    {
+        var result = await MessageBoxService
+               .GetMessageBoxStandard(
+                   AppResources.Aviso,
+                   AppResources.SalirPregunta,
+                   ButtonEnum.YesNo,
+                   Icon.Question);
+
+        if (result == ButtonResult.Yes)
+        {
+            LoggerService?.LogInformation("Quiting App.");
+            App.GeneradorApp?.Shutdown();
+        }
     }
 
     async Task SaveFileDialog()
     {
         try
         {
-            if (App.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop ||
-            desktop.MainWindow?.StorageProvider is not { } provider)
+            if (App.GeneradorApp?.MainWindow?.StorageProvider is not { } provider)
                 throw new NullReferenceException("Missing StorageProvider instance.");
 
             var fileType = new FilePickerFileType(GetExtension());
             var file = await provider.SaveFilePickerAsync(new FilePickerSaveOptions()
             {
-                Title = "Guardar Numerador",
+                Title = AppResources.GuardarNumerador,
                 FileTypeChoices = new List<FilePickerFileType> { fileType },
                 DefaultExtension = GetExtension(),
                 ShowOverwritePrompt = true,
@@ -98,7 +131,7 @@ public partial class MainWindowViewModel : ViewModelBase
         catch (Exception e)
         {
             System.Diagnostics.Debug.WriteLine(e.Message);
-            await MessageBoxService?
+            await MessageBoxService
                 .GetMessageBoxStandard(
                     AppResources.Error,
                     AppResources.ErrorRuta,
@@ -358,9 +391,9 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         return SelectedFormat switch
         {
-            (int)ExtensionesEnum.Excel => ".xlsx",
-            (int)ExtensionesEnum.CSV => ".csv",
-            _ => ".xlsx",
+            (int)ExtensionesEnum.Excel => AppResources.xlsx,
+            (int)ExtensionesEnum.CSV => AppResources.csv,
+            _ => AppResources.xlsx,
         };
     }
 }

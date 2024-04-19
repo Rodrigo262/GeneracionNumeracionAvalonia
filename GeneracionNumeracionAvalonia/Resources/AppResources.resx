@@ -79,5 +79,17 @@
 	<data name="ArchivoCSV" xml:space="preserve">
 		<value>Valores Separados por comas | *.csv</value>
 	</data>
+	<data name="GuardarNumerador" xml:space="preserve">
+		<value>Guardar Numerador</value>
+	</data>
+	<data name="xlsx" xml:space="preserve">
+		<value>.xlsx</value>
+	</data>
+	<data name="csv" xml:space="preserve">
+		<value>.csv</value>
+	</data>
+	<data name="SalirPregunta" xml:space="preserve">
+		<value>¿Estas seguro que quieres salir de la aplicación?</value>
+	</data>
 </root>
 
