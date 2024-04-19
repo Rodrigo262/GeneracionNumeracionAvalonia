@@ -15,7 +15,8 @@ build:
 format:
 	dotnet format $(SOLUTION)
 
-test: format 
+test: 
+	dotnet format $(SOLUTION) --verify-no-changes
 	dotnet test $(TEST_PROJECT)
 
 package:
