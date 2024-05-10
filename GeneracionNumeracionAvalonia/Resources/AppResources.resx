@@ -73,6 +73,9 @@
 	<data name="Formato" xml:space="preserve">
 		<value>Formato: </value>
 	</data>
+	<data name="FormatoSalida" xml:space="preserve">
+		<value>Formato salida: </value>
+	</data>
 	<data name="ArchivoExcel" xml:space="preserve">
 		<value>Archivo excel (*.xlsx) | *.xlsx</value>
 	</data>

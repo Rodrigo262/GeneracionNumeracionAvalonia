@@ -9,8 +9,8 @@
         x:Class="GeneracionNumeracionAvalonia.Views.MainWindow"
         Icon="/Assets/logoAzul.png"
         MinWidth="450"
-        MinHeight="400"
-        Width="500"
+        MinHeight="600"
+        Width="600"
         Height="500"
         Title="{x:Static resources:AppResources.GeneradorBaseDatos}"
         x:DataType="vm:MainWindowViewModel">

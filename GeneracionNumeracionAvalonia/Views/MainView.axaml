@@ -8,7 +8,7 @@
              x:Class="GeneracionNumeracionAvalonia.Views.MainView"
              x:DataType="vm:MainWindowViewModel">
 
- <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, *, Auto">
+ <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, *, Auto">
         <Grid Grid.Row="0" Margin="10">
             <TextBlock Text="{x:Static resources:AppResources.GeneradorBaseDatos}"
                        Foreground="{StaticResource PrimaryBrush}"     
@@ -65,9 +65,26 @@
                            Value="{Binding End}"/>
         </Grid>
 
-        <Grid Grid.Row="3" ColumnDefinitions="Auto, *" Margin="10">
-            <TextBlock Grid.Column="0"
+        
+        <Grid Grid.Row="3" RowDefinitions="Auto, Auto" Margin="10">
+            <TextBlock Grid.Row="0"
                            Text="{x:Static resources:AppResources.Formato}"
+                           FontSize="18"
+                           Margin="10,10"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Left"/>
+            <Grid Grid.Row="1" ColumnDefinitions="*, *" Margin="10">
+                <RadioButton GroupName="First Group" Grid.Column="0" IsChecked="{Binding IsCheckedDefaultFormat}"
+                             Content="Con formato &quot;0001&quot;" FontSize="18"/>
+                <RadioButton GroupName="First Group" Grid.Column="1"
+                             Content="Con formato &quot;1&quot;" FontSize="18"/>
+            </Grid>
+            
+        </Grid>
+
+        <Grid Grid.Row="4" ColumnDefinitions="Auto, *" Margin="10">
+            <TextBlock Grid.Column="0"
+                           Text="{x:Static resources:AppResources.FormatoSalida}"
                            FontSize="18"
                            Margin="10,10"
                            VerticalAlignment="Center"
@@ -80,8 +97,7 @@
                       SelectedIndex="{Binding SelectedFormat}"/>
         </Grid>
         
-        
-        <Button Grid.Row="4"
+        <Button Grid.Row="5"
                 Margin="10,10"
                 HorizontalAlignment="Stretch"
                 Command="{Binding GenerateCommand}"
@@ -95,10 +111,10 @@
         </Button>
 
         <Image Source="/Assets/logoAzul.png" Width="50"
-               Grid.Row="5"
+               Grid.Row="6"
                VerticalAlignment="Bottom"/>
 
-        <TextBlock Grid.Row="6"
+        <TextBlock Grid.Row="7"
                    Text="{x:Static resources:AppResources.Copyright}"
                    Margin="10,10"
                    FontSize="12"

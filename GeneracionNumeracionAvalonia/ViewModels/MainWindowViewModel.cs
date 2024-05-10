@@ -33,6 +33,10 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private int selectedFormat = 0;
 
+    [ObservableProperty]
+    private bool isCheckedDefaultFormat = true;
+
+
     public ICommand? GenerateCommand { get; set; }
     public ICommand? ShutdownCommand { get; set; }
     public ICommand? VersionCommand { get; set; }
@@ -381,8 +385,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
         for (int i = 0; i < Counters; i++)
         {
-            linea[i] = (registro + (serie * i)).ToString("D4");
-
+            linea[i] = IsCheckedDefaultFormat ? (registro + (serie * i)).ToString("D4") : registro.ToString();
         }
         return linea;
     }

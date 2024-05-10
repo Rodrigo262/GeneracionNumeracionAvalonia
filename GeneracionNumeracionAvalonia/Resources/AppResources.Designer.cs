@@ -191,6 +191,15 @@ namespace GeneracionNumeracionAvalonia.Resources {
                 return ResourceManager.GetString("Formato", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Formato salida: .
+        /// </summary>
+        public static string FormatoSalida {
+            get {
+                return ResourceManager.GetString("FormatoSalida", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to Generador de Base de Datos.
