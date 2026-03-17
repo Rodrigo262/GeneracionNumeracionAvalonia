@@ -184,7 +184,7 @@ public partial class MainWindowViewModel : ViewModelBase
             await MessageBoxService
                 .GetMessageBoxStandard(
                    AppResources.Error,
-                   AppResources.ErrorGenerico,
+                   e.Message,
                    ButtonEnum.Ok,
                    Icon.Error);
         }
