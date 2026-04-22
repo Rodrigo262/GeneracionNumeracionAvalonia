@@ -393,6 +393,11 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+*.exe
+*.pkg
+
+# Application build output
+App/
 
 # JetBrains Rider
 *.sln.iml
