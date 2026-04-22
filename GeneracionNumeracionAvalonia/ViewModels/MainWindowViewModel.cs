@@ -25,10 +25,10 @@ public partial class MainWindowViewModel : ViewModelBase
     private int counters = 1;
 
     [ObservableProperty]
-    private int start = 0;
+    private int? start = 0;
 
     [ObservableProperty]
-    private int end = 0;
+    private int? end = 0;
 
     [ObservableProperty]
     private int selectedFormat = 0;
@@ -88,31 +88,72 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         try
         {
-            if (App.GeneradorApp?.MainWindow?.StorageProvider is not { } provider)
-                throw new NullReferenceException("Missing StorageProvider instance.");
+            var mainWindow = App.GeneradorApp?.MainWindow;
+            if (mainWindow?.StorageProvider is not { } provider)
+            {
+                throw new NullReferenceException("StorageProvider is not available. Try again.");
+            }
 
-            var fileType = new FilePickerFileType(GetExtension());
+            var xlsxType = new FilePickerFileType(AppResources.ArchivoExcel)
+            {
+                Patterns = new List<string> { "*.xlsx" },
+                MimeTypes = new List<string> { "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }
+            };
+            var csvType = new FilePickerFileType(AppResources.ArchivoCSV)
+            {
+                Patterns = new List<string> { "*.csv" },
+                MimeTypes = new List<string> { "text/csv" }
+            };
+
+            // El formato seleccionado va primero en la lista
+            bool isExcel = SelectedFormat == (int)ExtensionesEnum.Excel;
+            var fileTypes = isExcel
+                ? new List<FilePickerFileType> { xlsxType, csvType }
+                : new List<FilePickerFileType> { csvType, xlsxType };
+
+            var ext = GetExtension();
+            var suggestedNameWithoutExt = filename.EndsWith(ext, StringComparison.OrdinalIgnoreCase)
+                ? filename[..^ext.Length]
+                : filename;
+
             var file = await provider.SaveFilePickerAsync(new FilePickerSaveOptions()
             {
                 Title = AppResources.GuardarNumerador,
-                FileTypeChoices = new List<FilePickerFileType> { fileType },
-                DefaultExtension = GetExtension(),
+                FileTypeChoices = fileTypes,
+                DefaultExtension = ext.TrimStart('.'),
                 ShowOverwritePrompt = true,
-                SuggestedFileName = filename,
+                SuggestedFileName = suggestedNameWithoutExt,
             });
 
-            if (file is null) return;
-            path = file.Path.LocalPath;
+            if (file is null)
+                return;
 
-            if (!path.EndsWith(GetExtension(), StringComparison.OrdinalIgnoreCase))
+            // TryGetLocalPath() es el método correcto en Avalonia (multiplataforma)
+            path = file.TryGetLocalPath() ?? file.Path.LocalPath;
+
+            // Sincronizar SelectedFormat con la extensión que escogió el usuario
+            if (path.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
+                SelectedFormat = (int)ExtensionesEnum.Excel;
+            else if (path.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+                SelectedFormat = (int)ExtensionesEnum.CSV;
+
+            // Asegurar que la extensión está presente en el path
+            var finalExt = GetExtension();
+            if (!path.EndsWith(finalExt, StringComparison.OrdinalIgnoreCase))
             {
-                path += GetExtension();
+                path += finalExt;
             }
         }
         catch (Exception e)
         {
-            System.Diagnostics.Debug.WriteLine(e.Message);
+            System.Diagnostics.Debug.WriteLine($"SaveFileDialog Error: {e.Message}");
             LoggerService?.LogError(e, nameof(SaveFileDialog));
+            await MessageBoxService
+                .GetMessageBoxStandard(
+                    AppResources.Error,
+                    $"{AppResources.ErrorRuta}: {e.Message}",
+                    ButtonEnum.Ok,
+                    Icon.Error);
         }
     }
 
@@ -120,14 +161,14 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         try
         {
-            serie = (End - Start + 1) / Counters;
+            serie = (End.Value - Start.Value + 1) / Counters;
             if (Counters != 1)
             {
-                filename = $"{Counters} {AppResources.NumeradoresDel} {Start} {AppResources.A} {End}{GetExtension()}";
+                filename = $"{Counters} {AppResources.NumeradoresDel} {Start.Value} {AppResources.A} {End.Value}{GetExtension()}";
             }
             else
             {
-                filename = $"{Counters} {AppResources.NumeradorDel} {Start} {AppResources.A} {End}{GetExtension()}";
+                filename = $"{Counters} {AppResources.NumeradorDel} {Start.Value} {AppResources.A} {End.Value}{GetExtension()}";
             }
 
             await SaveFileDialog();
@@ -153,6 +194,14 @@ public partial class MainWindowViewModel : ViewModelBase
                 return;
 
             await Browse();
+
+            // Validar que el usuario seleccionó un archivo
+            if (string.IsNullOrEmpty(path))
+            {
+                LoggerService?.LogInformation("User cancelled file selection.");
+                return;
+            }
+
             bool result = false;
 
             switch (SelectedFormat)
@@ -195,6 +244,9 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         try
         {
+            if (string.IsNullOrEmpty(path))
+                throw new InvalidOperationException("Path cannot be empty.");
+
             ExcelPackage.LicenseContext = LicenseContext.Commercial;
 
             using ExcelPackage excel = new();
@@ -224,6 +276,9 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         try
         {
+            if (string.IsNullOrEmpty(path))
+                throw new InvalidOperationException("Path cannot be empty.");
+
             var headers = string.Join("; ", GenerateHeaderCounters());
 
             var numbers = GenerateNumbers();
@@ -299,7 +354,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         List<string[]> datos = new List<string[]>();
 
-        for (int i = Start; i <= Start + serie - 1; i++)
+        for (int i = Start.Value; i <= Start.Value + serie - 1; i++)
         {
             var linea = NewLine(i);
             datos.Add(linea);
@@ -331,7 +386,18 @@ public partial class MainWindowViewModel : ViewModelBase
 
     async Task<bool> Validation()
     {
-        if (End == 0)
+        if (!Start.HasValue)
+        {
+            await MessageBoxService
+               .GetMessageBoxStandard(
+                   AppResources.Error,
+                   AppResources.ErrorFinMenorInicio,
+                   ButtonEnum.Ok,
+                   Icon.Error);
+            LoggerService?.LogInformation(AppResources.ErrorFinMenorInicio);
+            return false;
+        }
+        if (!End.HasValue || End <= 0)
         {
             await MessageBoxService
                .GetMessageBoxStandard(
@@ -342,7 +408,7 @@ public partial class MainWindowViewModel : ViewModelBase
             LoggerService?.LogInformation(AppResources.ErrorFinMenor0);
             return false;
         }
-        if (Start >= End)
+        if (Start.Value >= End.Value)
         {
             await MessageBoxService
                .GetMessageBoxStandard(
@@ -364,7 +430,7 @@ public partial class MainWindowViewModel : ViewModelBase
             LoggerService?.LogInformation(AppResources.ErrorNumeradores0);
             return false;
         }
-        if (((End - Start + 1) % Counters) != 0)
+        if (((End.Value - Start.Value + 1) % Counters) != 0)
         {
             var result = await MessageBoxService
                .GetMessageBoxStandard(
