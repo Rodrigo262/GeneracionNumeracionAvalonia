@@ -46,6 +46,9 @@
     <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Version.txt" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Update="Resources\AppResources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>AppResources.Designer.cs</LastGenOutput>

@@ -56,7 +56,11 @@ public partial class MainWindowViewModel : ViewModelBase
 
     async void VersionExecute(object? parameter)
     {
-        Version version = Assembly.GetExecutingAssembly().GetName().Version;
+        var assembly = Assembly.GetExecutingAssembly();
+        using var stream = assembly.GetManifestResourceStream("GeneracionNumeracionAvalonia.Version.txt");
+        var version = stream is not null
+            ? new StreamReader(stream).ReadToEnd().Trim()
+            : "??";
 
         // Mostrar la versión en un MessageBox
 
