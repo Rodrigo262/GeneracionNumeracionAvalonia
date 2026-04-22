@@ -1,10 +1,10 @@
 name: Build and Package
 
 on:
-  push:
+ push:
     branches:
       - main
-  pull_request:
+ pull_request:
     branches:
       - main
 
@@ -16,7 +16,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup .NET Core
+      - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
@@ -25,20 +25,19 @@ jobs:
         run: dotnet restore GeneracionNumeracionAvalonia.sln
 
       - name: Build
-        run: dotnet build GeneracionNumeracionAvalonia.sln
+        run: dotnet build GeneracionNumeracionAvalonia.sln --configuration Release
 
       - name: Test
-        continue-on-error: false  
         run: dotnet test GeneracionNumeracionTest/GeneracionNumeracionTest.csproj
 
-      - name: Package
+      - name: Package macOS
         run: |
-          sh package/Macos/packaging.sh 
+          sh package/Macos/packaging.sh
 
-      - name: Upload artifact
+      - name: Upload macOS artifact
         uses: actions/upload-artifact@v4
         with:
-          name: GeneracionNumeracion.pkg
+          name: GeneracionNumeracion-macos-pkg
           path: ${{ github.workspace }}/GeneracionNumeracion-*.pkg
 
   windows:
@@ -48,7 +47,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup .NET Core
+      - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
@@ -57,36 +56,65 @@ jobs:
         run: dotnet restore GeneracionNumeracionAvalonia.sln
 
       - name: Build
-        run: dotnet build GeneracionNumeracionAvalonia.sln
+        run: dotnet build GeneracionNumeracionAvalonia.sln --configuration Release
 
       - name: Test
-        continue-on-error: false  
         run: dotnet test GeneracionNumeracionTest/GeneracionNumeracionTest.csproj
 
-      - name: Package
-        run: dotnet publish GeneracionNumeracionAvalonia/GeneracionNumeracionAvalonia.csproj -c Release -f net8.0 -r win-x64 /p:PublishSingleFile=true /p:PublishTrimmed=true /p:IncludeNativeLibrariesForSelfExtract=true /p:GenerateAppxPackageOnBuild=true
+      - name: Publish Windows app
+        shell: powershell
+        run: |
+          dotnet publish `
+            GeneracionNumeracionAvalonia/GeneracionNumeracionAvalonia.csproj `
+            -c Release `
+            -f net8.0 `
+            -r win-x64 `
+            /p:PublishSingleFile=true `
+            /p:PublishTrimmed=true `
+            /p:IncludeNativeLibrariesForSelfExtract=true
 
-      - name: Rename file with short commit hash
+      - name: Rename executable with short commit hash
         shell: bash
         run: |
           HASH=$(git rev-parse --short HEAD)
           echo "Short commit hash: ${HASH}"
-          mv GeneracionNumeracionAvalonia/bin/Release/net8.0/win-x64/publish/*.exe GeneracionNumeracionAvalonia/bin/Release/net8.0/win-x64/publish/GeneracionNumeracion-${HASH}.exe
 
-      - name: Upload artifact
+          mv GeneracionNumeracionAvalonia/bin/Release/net8.0/win-x64/publish/*.exe \
+          GeneracionNumeracionAvalonia/bin/Release/net8.0/win-x64/publish/GeneracionNumeracion-${HASH}.exe
+
+      - name: Install Inno Setup
+        run: choco install innosetup -y
+
+      - name: Build Windows installer
+        shell: cmd
+        run: |
+          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\setup.iss
+
+      - name: Rename installer with short commit hash
+        shell: bash
+        run: |
+          HASH=$(git rev-parse --short HEAD)
+
+          mv installer/output/GeneracionNumeracionSetup.exe \
+          installer/output/GeneracionNumeracionSetup-${HASH}.exe
+
+      - name: Upload Windows executable
         uses: actions/upload-artifact@v4
         with:
-          name: GeneracionNumeracion.exe
+          name: GeneracionNumeracion-windows-exe
           path: GeneracionNumeracionAvalonia/bin/Release/net8.0/win-x64/publish/GeneracionNumeracion-*.exe
 
+      - name: Upload Windows installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: GeneracionNumeracion-windows-setup
+          path: installer/output/GeneracionNumeracionSetup-*.exe
 
   cleanup-macos:
     runs-on: macos-latest
     needs: [macos]
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
       - name: Clean workspace for macOS
         run: |
           rm -rf ./* || true
@@ -97,8 +125,7 @@ jobs:
     needs: [windows]
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
       - name: Clean workspace for Windows
+        shell: powershell
         run: |
-          Remove-Item -Path *.* -Force -Recurse
+          Remove-Item -Path * -Force -Recurse -ErrorAction SilentlyContinue
